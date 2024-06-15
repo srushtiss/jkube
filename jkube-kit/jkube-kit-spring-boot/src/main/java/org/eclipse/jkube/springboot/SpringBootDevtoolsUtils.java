@@ -13,6 +13,7 @@
  */
 package org.eclipse.jkube.springboot;
 
+import io.github.pixee.security.ZipSecurity;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jkube.generator.javaexec.FatJarDetector;
@@ -107,7 +108,7 @@ public class SpringBootDevtoolsUtils {
     FileUtils.moveFile(target, tmpZip);
 
     byte[] buffer = new byte[8192];
-    try (ZipInputStream zin = new ZipInputStream(new FileInputStream(tmpZip));
+    try (ZipInputStream zin = ZipSecurity.createHardenedInputStream(new FileInputStream(tmpZip));
          ZipOutputStream out = new ZipOutputStream(new FileOutputStream(target))) {
       for (ZipEntry ze = zin.getNextEntry(); ze != null; ze = zin.getNextEntry()) {
         if (matchesFatJarEntry(libs, ze.getName(), true) || matchesFatJarEntry(classes, ze.getName(), false)) {
