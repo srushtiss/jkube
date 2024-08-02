@@ -13,6 +13,8 @@
  */
 package org.eclipse.jkube.kit.resource.helm;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.File;
 import java.io.IOException;
 import java.net.Authenticator;
@@ -51,7 +53,7 @@ public class HelmRepositoryConnectionUtils {
   }
 
   private static HttpURLConnection createConnection(HelmRepository repository, String url) throws IOException {
-    final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+    final HttpURLConnection connection = (HttpURLConnection) Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).openConnection();
     connection.setDoOutput(true);
     connection.setRequestMethod("POST");
     connection.setRequestProperty(StandardHttpHeaders.CONTENT_TYPE, "application/gzip");
