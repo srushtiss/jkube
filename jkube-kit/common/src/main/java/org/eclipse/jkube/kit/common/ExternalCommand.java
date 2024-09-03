@@ -13,6 +13,7 @@
  */
 package org.eclipse.jkube.kit.common;
 
+import io.github.pixee.security.SystemCommand;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -114,7 +115,7 @@ public abstract class ExternalCommand {
 
     private Process startProcess() throws IOException {
         try {
-            return Runtime.getRuntime().exec(getArgs(), null, workDir);
+            return SystemCommand.runCommand(Runtime.getRuntime(), getArgs(), null, workDir);
         } catch (IOException e) {
             throw new IOException(String.format("Failed to start '%s' : %s",
                                                 getCommandAsString(),
