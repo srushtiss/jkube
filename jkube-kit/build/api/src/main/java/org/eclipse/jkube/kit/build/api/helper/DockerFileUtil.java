@@ -13,6 +13,7 @@
  */
 package org.eclipse.jkube.kit.build.api.helper;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -105,7 +106,7 @@ public class DockerFileUtil {
         List<String[]> ret = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(dockerFile))) {
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 String lineInterpolated = JKubeFileInterpolator.interpolate(line, properties, filter);
                 String[] lineParts = lineInterpolated.split("\\s+");
                 if (lineParts.length > 0 && lineParts[0].equalsIgnoreCase(keyword)) {
