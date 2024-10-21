@@ -17,6 +17,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -223,7 +224,7 @@ public abstract class AbstractJKubeTask extends DefaultTask implements Kubernete
       File targetFile = new File(outDir, resource.getName());
       String resourceFragmentInterpolated = interpolate(resource, kubernetesExtension.javaProject.getProperties(),
         kubernetesExtension.getFilter().getOrNull());
-      try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile))) {
+      try (BufferedWriter writer = Files.newBufferedWriter(targetFile.toPath())) {
         writer.write(resourceFragmentInterpolated);
       }
       ret[i++] = targetFile;
