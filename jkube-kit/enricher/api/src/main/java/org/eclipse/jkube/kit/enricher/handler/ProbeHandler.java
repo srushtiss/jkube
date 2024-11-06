@@ -19,6 +19,8 @@ import io.fabric8.kubernetes.api.model.HTTPHeader;
 import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.Probe;
 import io.fabric8.kubernetes.api.model.TCPSocketAction;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.eclipse.jkube.kit.common.util.CommandLine;
 import org.eclipse.jkube.kit.config.resource.ProbeConfig;
 
@@ -76,7 +78,7 @@ public class ProbeHandler {
             return null;
         }
         try {
-            URL url = new URL(getUrl);
+            URL url = Urls.create(getUrl, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             List<HTTPHeader> httpHeaders = convertMapToHTTPHeaderList(headers);
 
             return new HTTPGetAction(url.getHost(),
@@ -109,7 +111,7 @@ public class ProbeHandler {
                 return new TCPSocketAction(getUrl, portObj);
             String validurl = getUrl.replaceFirst("(([a-zA-Z])+)://","http://");
             try{
-                URL url = new URL(validurl);
+                URL url = Urls.create(validurl, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                 return new TCPSocketAction(url.getHost(), portObj);
             }
             catch (MalformedURLException e){
