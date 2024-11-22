@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.nio.file.Files;
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -42,7 +43,7 @@ import static org.eclipse.jkube.kit.common.archive.ArchiveDecompressor.extractAr
  */
 public class IoUtil {
 
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new SecureRandom();
 
     private IoUtil() { }
 
