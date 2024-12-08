@@ -13,6 +13,7 @@
  */
 package org.eclipse.jkube.springboot.watcher;
 
+import io.github.pixee.security.SystemCommand;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -162,7 +163,7 @@ public class SpringBootWatcher extends BaseWatcher {
 
             try {
                 log.debug("Running: " + String.join(" ", command));
-                final Process process = runtime.exec(command);
+                final Process process = SystemCommand.runCommand(runtime, command);
 
                 final AtomicBoolean outputEnabled = new AtomicBoolean(true);
                 runtime.addShutdownHook(new Thread("jkube:watch [spring-boot] shutdown hook") {
