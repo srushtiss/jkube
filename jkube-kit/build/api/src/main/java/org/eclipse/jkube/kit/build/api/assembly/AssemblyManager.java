@@ -143,7 +143,7 @@ public class AssemblyManager {
     private void interpolateDockerfile(File dockerFile, BuildDirs params, Properties properties, String filter) throws IOException {
         File targetDockerfile = new File(params.getOutputDirectory(), dockerFile.getName());
         String dockerFileInterpolated = DockerFileUtil.interpolate(dockerFile, properties, filter);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetDockerfile))) {
+        try (BufferedWriter writer = Files.newBufferedWriter(targetDockerfile.toPath())) {
             writer.write(dockerFileInterpolated);
         }
     }
