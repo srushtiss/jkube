@@ -14,6 +14,8 @@
 package org.eclipse.jkube.kit.profile;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.eclipse.jkube.kit.common.JKubeException;
 import org.eclipse.jkube.kit.common.util.ClassUtil;
 import org.eclipse.jkube.kit.common.util.Serialization;
@@ -182,7 +184,7 @@ public class ProfileUtil {
         List<Profile > ret = new ArrayList<>();
         for (String location : getMetaInfProfilePaths(ext)) {
             for (String url : ClassUtil.getResources(location)) {
-                for (Profile profile : Serialization.unmarshal(new URL(url), new TypeReference<List<Profile>>() {})) {
+                for (Profile profile : Serialization.unmarshal(Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS), new TypeReference<List<Profile>>() {})) {
                     if (name.equals(profile.getName())) {
                         ret.add(profile);
                     }
