@@ -13,6 +13,8 @@
  */
 package org.eclipse.jkube.kit.service.buildpacks;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jkube.kit.common.KitLogger;
 import org.eclipse.jkube.kit.common.util.FileUtil;
@@ -85,7 +87,7 @@ public class BuildPackCliDownloader {
   private void downloadPackCli() throws IOException {
     File tempDownloadDirectory = FileUtil.createTempDirectory();
     FileUtil.createDirectory(jKubeUserHomeDir);
-    URL downloadUrl = new URL(inferApplicableDownloadArtifactUrl());
+    URL downloadUrl = Urls.create(inferApplicableDownloadArtifactUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
     Path packInJKubeDir = resolveBinaryLocation();
     kitLogger.info("Downloading pack CLI %s", packCliVersion);
 

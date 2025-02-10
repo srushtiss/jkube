@@ -64,5 +64,9 @@
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.github.pixee</groupId>
+      <artifactId>java-security-toolkit</artifactId>
+    </dependency>
   </dependencies>
 </project>
