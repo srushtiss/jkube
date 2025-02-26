@@ -13,6 +13,7 @@
  */
 package org.eclipse.jkube.quickstart.karaf;
 
+import java.security.SecureRandom;
 import org.apache.camel.CamelContext;
 
 import java.io.InputStream;
@@ -20,7 +21,7 @@ import java.util.Random;
 
 public class OrderGenerator {
   private int count = 1;
-  private Random random = new Random();
+  private Random random = new SecureRandom();
 
   public InputStream generateOrder(CamelContext camelContext) {
     final int number = random.nextInt(5) + 1;
