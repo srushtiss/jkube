@@ -13,6 +13,7 @@
  */
 package org.eclipse.jkube.kit.common.util;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -105,7 +106,7 @@ public class AsciiDocParser {
     }
 
     private String readColumn(final BufferedReader tableContent) throws IOException {
-        final String column = tableContent.readLine();
+        final String column = BoundedLineReader.readLine(tableContent, 5_000_000);
 
         if(column == null || column.isEmpty()) {
             throw new IllegalArgumentException("Trying to read a column but white line or EOF was found.");
@@ -126,7 +127,7 @@ public class AsciiDocParser {
      * Reads empty line or throw an exception if a none empty line was found.
      */
     private String readEmptyLineOrEndTable(final BufferedReader tableContent) throws IOException {
-        final String column = tableContent.readLine();
+        final String column = BoundedLineReader.readLine(tableContent, 5_000_000);
 
         if (column != null && column.startsWith(END_TABLE)) {
             return END_TABLE;
@@ -145,7 +146,7 @@ public class AsciiDocParser {
      */
     private void skipUntilColumns(final BufferedReader tableContent) throws IOException {
         String line;
-        while ((line = tableContent.readLine()) != null) {
+        while ((line = BoundedLineReader.readLine(tableContent, 5_000_000)) != null) {
             if(line.trim().isEmpty()){
                 break;
             }

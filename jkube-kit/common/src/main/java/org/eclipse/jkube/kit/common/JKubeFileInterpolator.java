@@ -13,6 +13,7 @@
  */
 package org.eclipse.jkube.kit.common;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -43,7 +44,7 @@ public class JKubeFileInterpolator {
         StringBuilder ret = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 ret.append(JKubeFileInterpolator.interpolate(line, properties, filter != null ? filter : DEFAULT_FILTER)).append(System.lineSeparator());
             }
         }
