@@ -13,6 +13,8 @@
  */
 package org.eclipse.jkube.kit.common.util;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
@@ -111,7 +113,7 @@ public class FileUtil {
         remotes.stream()
                 .map(remote -> {
                     try {
-                        return new URL(remote);
+                        return Urls.create(remote, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                     } catch (MalformedURLException e) {
                         throw new IllegalArgumentException(e);
                     }

@@ -17,6 +17,8 @@ import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.io.IOUtils;
 import org.apache.sshd.common.kex.KexProposalOption;
 import org.apache.sshd.common.session.Session;
@@ -173,7 +175,7 @@ class PortForwarderTest implements Supplier<RemoteDevelopmentContext> {
         // Then
         verify(context.getLogger(), timeout(10000).times(1))
           .info("SOCKS 5 proxy is now available at 'localhost:%s'", socksPort);
-        final InputStream is = new URL("http://localhost:" + server.getPort() + "/health")
+        final InputStream is = Urls.create("http://localhost:" + server.getPort() + "/health", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS)
           .openConnection(new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("localhost", socksPort)))
           .getInputStream();
         assertThat(IOUtils.toString(is, StandardCharsets.UTF_8))

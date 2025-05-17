@@ -13,6 +13,8 @@
  */
 package org.eclipse.jkube.kit.common.util;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -116,7 +118,7 @@ class IoUtilTest {
         File remoteDirectory = new File(getClass().getResource("/remote-resources").getFile());
         try (TestHttpStaticServer http = new TestHttpStaticServer(remoteDirectory)) {
             // Given
-            URL downloadUrl = new URL(String.format("http://localhost:%d/deployment.yaml", http.getPort()));
+            URL downloadUrl = Urls.create(String.format("http://localhost:%d/deployment.yaml", http.getPort()), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
             // When
             IoUtil.download(kitLogger, downloadUrl, new File(temporaryFolder, "deployment.yaml"));
@@ -136,7 +138,7 @@ class IoUtilTest {
         File remoteDirectory = new File(getClass().getResource("/downloadable-artifacts").getFile());
         try (TestHttpStaticServer http = new TestHttpStaticServer(remoteDirectory)) {
             // Given
-            URL downloadUrl = new URL(String.format("http://localhost:%d/foo-v0.0.1-linux.tgz", http.getPort()));
+            URL downloadUrl = Urls.create(String.format("http://localhost:%d/foo-v0.0.1-linux.tgz", http.getPort()), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
             // When
             IoUtil.downloadArchive(downloadUrl, temporaryFolder);
@@ -154,7 +156,7 @@ class IoUtilTest {
         File remoteDirectory = new File(getClass().getResource("/downloadable-artifacts").getFile());
         try (TestHttpStaticServer http = new TestHttpStaticServer(remoteDirectory)) {
             // Given
-            URL downloadUrl = new URL(String.format("http://localhost:%d/foo-v0.0.1-windows.zip", http.getPort()));
+            URL downloadUrl = Urls.create(String.format("http://localhost:%d/foo-v0.0.1-windows.zip", http.getPort()), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
             // When
             IoUtil.downloadArchive(downloadUrl, temporaryFolder);
@@ -172,7 +174,7 @@ class IoUtilTest {
         File remoteDirectory = new File(getClass().getResource("/downloadable-artifacts").getFile());
         try (TestHttpStaticServer http = new TestHttpStaticServer(remoteDirectory)) {
             // Given
-            URL downloadUrl = new URL(String.format("http://localhost:%d/idontexist-v0.0.1-linux.tgz", http.getPort()));
+            URL downloadUrl = Urls.create(String.format("http://localhost:%d/idontexist-v0.0.1-linux.tgz", http.getPort()), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
             // When + Then
             assertThatIOException()

@@ -13,6 +13,8 @@
  */
 package org.eclipse.jkube.kit.common.util;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
@@ -97,7 +99,7 @@ public final class PluginServiceFactory<C> {
 
     private <T> void readServiceDefinitionFromUrl(Map<ServiceEntry, T> extractorMap, String url) {
         String line = null;
-        try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(new URL(url).openStream(), StandardCharsets.UTF_8))) {
+        try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).openStream(), StandardCharsets.UTF_8))) {
             line = reader.readLine();
             while (line != null) {
                 createOrRemoveService(extractorMap, line);

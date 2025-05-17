@@ -22,6 +22,8 @@ import com.google.cloud.tools.jib.global.JibSystemProperties;
 import com.marcnuri.helm.jni.HelmLib;
 import com.marcnuri.helm.jni.NativeLibrary;
 import com.marcnuri.helm.jni.RepoServerOptions;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jkube.kit.build.api.assembly.BuildDirs;
@@ -180,7 +182,7 @@ class JibServiceTest {
       try (JibService jibService = new JibService(jibLogger, testAuthConfigFactory, configuration, imageConfiguration)) {
         jibService.push();
       }
-      final HttpURLConnection connection = (HttpURLConnection) new URL("http://" + remoteOciServer + "/v2/the-image-name/tags/list")
+      final HttpURLConnection connection = (HttpURLConnection) Urls.create("http://" + remoteOciServer + "/v2/the-image-name/tags/list", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS)
         .openConnection();
       connection.setRequestProperty("Authorization", "Basic " + Base64.encodeBase64String("oci-user:oci-password".getBytes()));
       connection.connect();
@@ -200,7 +202,7 @@ class JibServiceTest {
       try (JibService jibService = new JibService(jibLogger, testAuthConfigFactory, configuration, imageConfiguration)) {
         jibService.push();
       }
-      final HttpURLConnection connection = (HttpURLConnection) new URL("http://" + remoteOciServer + "/v2/the-image-name/tags/list")
+      final HttpURLConnection connection = (HttpURLConnection) Urls.create("http://" + remoteOciServer + "/v2/the-image-name/tags/list", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS)
         .openConnection();
       connection.setRequestProperty("Authorization", "Basic " + Base64.encodeBase64String("oci-user:oci-password".getBytes()));
       connection.connect();
